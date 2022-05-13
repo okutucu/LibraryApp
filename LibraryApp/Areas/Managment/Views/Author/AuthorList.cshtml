@@ -1,0 +1,33 @@
+﻿@model List<Author>
+@{
+	Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h3 class="text-center">Yazar Listeleme Sayfası</h3>
+<a class="btn btn-primary" style="float:right" asp-action="Create" asp-controller="Author">Yeni Ekle</a>
+
+<table class="table table-striped">
+	<thead>
+		<tr>
+			<th>#</th>
+			<th>Name</th>
+			<th>Lastname</th>
+			<th>Aksiyonlar</th>
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (Author item in Model)
+		{
+			<tr>
+			<th>@item.ID</th>
+			<td>@item.FirstName</td>
+			<td>@item.LastName</td>
+			<td>
+				<a class="big-icon" asp-controller="Author" asp-action="Edit" asp-route-id="@item.ID"><i class="bi bi-pencil-square"></i></a>
+				<a class="big-icon margin-icon" asp-controller="Author" asp-action="Delete" asp-route-id="@item.ID"> <i class="bi bi-x-circle"></i> </a>
+			</td>
+		</tr>
+		}
+	
+	</tbody>
+</table>

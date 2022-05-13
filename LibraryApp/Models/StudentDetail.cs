@@ -7,7 +7,7 @@ namespace LibraryApp.Models
     {
         public short SchoolNumber { get; set; }
         public Gender Gender { get; set; }
-        public DateTime BirthDay { get; set; }
+        public DateTime? BirthDay { get; set; }
         public int StudentID { get; set; }
 
         // Relational Properties

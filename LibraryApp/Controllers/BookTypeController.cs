@@ -3,20 +3,22 @@ using System.Collections.Generic;
 using System.Linq;
 using LibraryApp.Context;
 using LibraryApp.Models;
+using LibraryApp.RepositoryPattern.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LibraryApp.Controllers
 {
     public class BookTypeController : Controller
     {
-        MyDbContext _db;
-        public BookTypeController(MyDbContext db)
+
+        IBookTypeRepository _repoBookType;
+        public BookTypeController(IBookTypeRepository repoBookType)
         {
-            _db = db;
+            _repoBookType = repoBookType;
         }
         public IActionResult BookTypeList()
         {
-            List<BookType> bookTypes = _db.BookTypes.ToList();
+            List<BookType> bookTypes = _repoBookType.GetAll();
             return View(bookTypes);
         }
         public IActionResult Create()
@@ -27,32 +29,25 @@ namespace LibraryApp.Controllers
         [HttpPost]
         public IActionResult Create(BookType bookType)
         {
-            _db.BookTypes.Add(bookType);
-            _db.SaveChanges();
-
+            _repoBookType.Add(bookType);
             return RedirectToAction("BookTypeList");
         }
 
         public IActionResult Edit(int id)
         {
-            BookType bookType = _db.BookTypes.Find(id);
+            BookType bookType = _repoBookType.GetById(id);
             return View(bookType);
         }
         [HttpPost]
         public IActionResult Edit(BookType bookType)
         {
-            bookType.Status = Enums.DataStatus.Updated;
-            bookType.MofidiedDate = DateTime.Now;
-            _db.BookTypes.Update(bookType);
-            _db.SaveChanges();
+            _repoBookType.Update(bookType);
             return RedirectToAction("BookTypeList");
         }
 
         public IActionResult HardDelete(int id)
         {
-            BookType bookType = _db.BookTypes.Find(id);
-            _db.BookTypes.Remove(bookType);
-            _db.SaveChanges();
+            _repoBookType.SpeacialDelete(id);
             return RedirectToAction("BookTypeList");
         }
     }

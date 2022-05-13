@@ -3,6 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using LibraryApp.Context;
+using LibraryApp.Models;
+using LibraryApp.RepositoryPattern.Base;
+using LibraryApp.RepositoryPattern.Concrate;
+using LibraryApp.RepositoryPattern.Interfaces;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -25,15 +29,22 @@ namespace LibraryApp
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            
             services.AddRazorPages();
             services.AddDbContext<MyDbContext>(options => options.UseSqlServer(Configuration["ConnectionStrings:Mssql"]));
             services.AddControllersWithViews();
+            //services.AddScoped<IRepository<BookType>, Repository<BookType>>();
+            //services.AddScoped<IRepository<Author>, Repository<Author>>();
+            services.AddScoped<IBookRepository, BookRepository>();
+            services.AddScoped<IAuthorRepository, AuthorRepository>();
+            services.AddScoped<IBookTypeRepository, BookTypeRepository>();
+            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
+        public void Configure(IApplicationBuilder app, IWebHostEnvironment env,MyDbContext context)
         {
+            context.Database.Migrate();
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -55,8 +66,12 @@ namespace LibraryApp
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(
+                   name: "DefatultArea",
+                   pattern: "{area:exists}/{controller=Home}/{action=Login}/{id?}");
+                endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Home}/{action=Index}/{id?}");
+                    pattern: "{controller=Auth}/{action=Login}/{id?}");
+               
             });
         }
     }

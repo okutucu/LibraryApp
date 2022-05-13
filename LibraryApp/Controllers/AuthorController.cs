@@ -3,21 +3,22 @@ using System.Collections.Generic;
 using System.Linq;
 using LibraryApp.Context;
 using LibraryApp.Models;
+using LibraryApp.RepositoryPattern.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
 namespace LibraryApp.Controllers
 {
     public class AuthorController : Controller
     {
-        MyDbContext _db;
-        public AuthorController(MyDbContext db)
+        IAuthorRepository _repoAuthor;
+        public AuthorController(IAuthorRepository repoAuthor)
         {
-            _db = db;
+            _repoAuthor = repoAuthor;
         }
         public IActionResult AuthorList()
         {
-            //List<Author> authorList = _db.Authors.ToList();
-            List<Author> authors = _db.Authors.Where(a=> a.Status != Enums.DataStatus.Deleted).ToList();
+
+            List<Author> authors = _repoAuthor.GetActives();
             return View(authors);
         }
 
@@ -30,35 +31,27 @@ namespace LibraryApp.Controllers
         [HttpPost]
         public IActionResult Create(Author author)
         {
-            _db.Authors.Add(author);
-            _db.SaveChanges();
+            _repoAuthor.Add(author);
             return RedirectToAction("AuthorList");
         }
 
         public IActionResult Edit(int id)
         {
-            Author author = _db.Authors.Find(id);
+            Author author = _repoAuthor.GetById(id);
             return View(author);
         }
 
         [HttpPost]
         public IActionResult Edit(Author author)
         {
-            author.Status = Enums.DataStatus.Updated;
-            author.MofidiedDate = DateTime.Now;
-            _db.Authors.Update(author);
-            _db.SaveChanges();
+           _repoAuthor.Update(author);
 
             return RedirectToAction("AuthorList");
         }
 
         public IActionResult Delete(int id)
         {
-            Author author = _db.Authors.Find(id);
-            author.Status = Enums.DataStatus.Deleted;
-            author.MofidiedDate = DateTime.Now;
-            _db.Authors.Update(author);
-            _db.SaveChanges();
+           _repoAuthor.Delete(id);
             return RedirectToAction("AuthorList");
         }
     }

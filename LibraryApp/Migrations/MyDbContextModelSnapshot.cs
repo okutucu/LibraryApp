@@ -19,6 +19,59 @@ namespace LibraryApp.Migrations
                 .HasAnnotation("ProductVersion", "5.0.17")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+            modelBuilder.Entity("LibraryApp.Models.AppUser", b =>
+                {
+                    b.Property<int>("ID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("DeletedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<DateTime?>("MofidiedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Password")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Role")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("ID");
+
+                    b.ToTable("Users");
+
+                    b.HasData(
+                        new
+                        {
+                            ID = 1,
+                            CreatedDate = new DateTime(2022, 5, 13, 11, 1, 31, 484, DateTimeKind.Local).AddTicks(1102),
+                            Password = "$2a$11$32Ci7fsUEYq8fT0/jlPmmennqRPu/d35fN15BVvoMMq3CfWBYhpny",
+                            Role = 1,
+                            Status = 1,
+                            UserName = "admin"
+                        },
+                        new
+                        {
+                            ID = 2,
+                            CreatedDate = new DateTime(2022, 5, 13, 11, 1, 31, 488, DateTimeKind.Local).AddTicks(3687),
+                            Password = "$2a$11$XYqH84sfCb09wEwDdIoNzO/fokpaLKQlc74U.syizRdbyfjgpyNYa",
+                            Role = 2,
+                            Status = 1,
+                            UserName = "oguz"
+                        });
+                });
+
             modelBuilder.Entity("LibraryApp.Models.Author", b =>
                 {
                     b.Property<int>("ID")
@@ -184,6 +237,44 @@ namespace LibraryApp.Migrations
                     b.HasKey("ID");
 
                     b.ToTable("Students");
+
+                    b.HasData(
+                        new
+                        {
+                            ID = 1,
+                            CreatedDate = new DateTime(2022, 5, 13, 11, 1, 31, 489, DateTimeKind.Local).AddTicks(8815),
+                            FirstName = "Serhan",
+                            LastName = "Kılıç",
+                            PhoneNumber = "5555555",
+                            Status = 1
+                        },
+                        new
+                        {
+                            ID = 2,
+                            CreatedDate = new DateTime(2022, 5, 13, 11, 1, 31, 489, DateTimeKind.Local).AddTicks(9994),
+                            FirstName = "Kaan",
+                            LastName = "Kutucu",
+                            PhoneNumber = "33333",
+                            Status = 1
+                        },
+                        new
+                        {
+                            ID = 3,
+                            CreatedDate = new DateTime(2022, 5, 13, 11, 1, 31, 490, DateTimeKind.Local).AddTicks(11),
+                            FirstName = "Özgür",
+                            LastName = "Cansız",
+                            PhoneNumber = "123456",
+                            Status = 1
+                        },
+                        new
+                        {
+                            ID = 4,
+                            CreatedDate = new DateTime(2022, 5, 13, 11, 1, 31, 490, DateTimeKind.Local).AddTicks(15),
+                            FirstName = "Zeynep",
+                            LastName = "Kurt",
+                            PhoneNumber = "4444444",
+                            Status = 1
+                        });
                 });
 
             modelBuilder.Entity("LibraryApp.Models.StudentDetail", b =>
@@ -193,7 +284,7 @@ namespace LibraryApp.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<DateTime>("BirthDay")
+                    b.Property<DateTime?>("BirthDay")
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime>("CreatedDate")
@@ -223,6 +314,44 @@ namespace LibraryApp.Migrations
                         .IsUnique();
 
                     b.ToTable("StudentDetail");
+
+                    b.HasData(
+                        new
+                        {
+                            ID = 1,
+                            CreatedDate = new DateTime(2022, 5, 13, 11, 1, 31, 490, DateTimeKind.Local).AddTicks(769),
+                            Gender = 1,
+                            SchoolNumber = (short)244,
+                            Status = 1,
+                            StudentID = 1
+                        },
+                        new
+                        {
+                            ID = 2,
+                            CreatedDate = new DateTime(2022, 5, 13, 11, 1, 31, 490, DateTimeKind.Local).AddTicks(2037),
+                            Gender = 1,
+                            SchoolNumber = (short)123,
+                            Status = 1,
+                            StudentID = 2
+                        },
+                        new
+                        {
+                            ID = 3,
+                            CreatedDate = new DateTime(2022, 5, 13, 11, 1, 31, 490, DateTimeKind.Local).AddTicks(2055),
+                            Gender = 1,
+                            SchoolNumber = (short)444,
+                            Status = 1,
+                            StudentID = 3
+                        },
+                        new
+                        {
+                            ID = 4,
+                            CreatedDate = new DateTime(2022, 5, 13, 11, 1, 31, 490, DateTimeKind.Local).AddTicks(2059),
+                            Gender = 2,
+                            SchoolNumber = (short)122,
+                            Status = 1,
+                            StudentID = 4
+                        });
                 });
 
             modelBuilder.Entity("LibraryApp.Models.Book", b =>

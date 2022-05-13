@@ -1,0 +1,31 @@
+﻿@model List<BookType>
+@{
+	Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h3 class="text-center">Kitap Tipi Listeleme Sayfası</h3>
+<a class="btn btn-primary" style="float:right" asp-action="Create" asp-controller="BookType">Yeni Ekle</a>
+
+<table class="table table-striped">
+	<thead>
+		<tr>
+			<th>#</th>
+			<th>Name</th>
+			<th>Aksiyonlar</th>
+		</tr>
+	</thead>
+	<tbody>
+		@foreach (BookType item in Model)
+		{
+			<tr>
+			<th>@item.ID</th>
+			<td>@item.Name</td>
+			<td>
+				<a class="big-icon" asp-controller="BookType" asp-action="Edit" asp-route-id="@item.ID"><i class="bi bi-pencil-square"></i></a>
+				<a class="big-icon margin-icon" asp-controller="BookType" asp-action="HardDelete" asp-route-id="@item.ID"> <i class="bi bi-x-circle"></i> </a>
+			</td>
+		</tr>
+		}
+	
+	</tbody>
+</table>

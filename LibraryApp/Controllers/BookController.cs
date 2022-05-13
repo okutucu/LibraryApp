@@ -4,6 +4,7 @@ using System.Linq;
 using LibraryApp.Context;
 using LibraryApp.Dto;
 using LibraryApp.Models;
+using LibraryApp.RepositoryPattern.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -11,33 +12,26 @@ namespace LibraryApp.Controllers
 {
     public class BookController : Controller
     {
-        MyDbContext _db;
-        public BookController(MyDbContext db)
+      
+        IBookRepository _repoBook;
+        IAuthorRepository _repoAuther;
+        IBookTypeRepository _repoTypeBook;
+        public BookController(IBookRepository repoBook,IAuthorRepository repoAuther, IBookTypeRepository repoTypeBook)
         {
-            _db = db;
+            _repoBook = repoBook;
+            _repoAuther = repoAuther;
+            _repoTypeBook = repoTypeBook;
         }
         public IActionResult BookList()
         {
-            List<Book> books = _db.Books.Where(b => b.Status != Enums.DataStatus.Deleted).Include(b => b.Author).Include(b => b.BookType).ToList();
+            List<Book> books = _repoBook.GetBooks();
             return View(books);
         }
         public IActionResult Create()
         {
-           List<AuthorDto> authors = _db.Authors.Where(x => x.Status != Enums.DataStatus.Deleted)
-                .Select(
-                x => new AuthorDto(){
-                    FirstName = x.FirstName,
-                    LastName = x.LastName,
-                    ID = x.ID
-                }).ToList();
+            List<AuthorDto> authors = _repoAuther.SelectAuthorDto();
 
-            List<BookTypeDto> bookTypes = _db.BookTypes.Where(x => x.Status != Enums.DataStatus.Deleted)
-             .Select(x =>
-             new BookTypeDto()
-             {
-                 Name = x.Name,
-                 ID = x.ID
-             }).ToList();
+            List<BookTypeDto> bookTypes = _repoTypeBook.SelectBookTypeDto();
 
             return View((new Book(), authors, bookTypes));
         }
@@ -45,31 +39,17 @@ namespace LibraryApp.Controllers
         [HttpPost]
         public IActionResult Create([Bind(Prefix = "Item1")] Book book)
         {
-            _db.Books.Add(book);
-            _db.SaveChanges();
+            _repoBook.Add(book);
             return RedirectToAction("BookList");
         }
 
         public IActionResult Edit(int id)
         {
-            Book book = _db.Books.Find(id);
+            Book book = _repoBook.GetById(id);
 
-            List<AuthorDto> authors = _db.Authors.Where(x => x.Status != Enums.DataStatus.Deleted)
-               .Select(
-               x => new AuthorDto()
-               {
-                   FirstName = x.FirstName,
-                   LastName = x.LastName,
-                   ID = x.ID
-               }).ToList();
+            List<AuthorDto> authors = _repoAuther.SelectAuthorDto();
 
-            List<BookTypeDto> bookTypes = _db.BookTypes.Where(x => x.Status != Enums.DataStatus.Deleted)
-             .Select(x =>
-             new BookTypeDto()
-             {
-                 Name = x.Name,
-                 ID = x.ID
-             }).ToList();
+            List<BookTypeDto> bookTypes = _repoTypeBook.SelectBookTypeDto();
 
             return View((new Book(), authors, bookTypes));
         }
@@ -77,10 +57,7 @@ namespace LibraryApp.Controllers
         [HttpPost]
         public IActionResult Edit([Bind(Prefix = "Item1")] Book book)
         {
-            book.Status = Enums.DataStatus.Updated;
-            book.MofidiedDate = DateTime.Now;
-            _db.Books.Update(book);
-            _db.SaveChanges();
+            _repoBook.Update(book);
 
             return RedirectToAction("BookList");
         }
